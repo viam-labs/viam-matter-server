@@ -2,10 +2,44 @@
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[project]
+name = "matter-controller-server"
+dynamic = ["version"]
+description = 'A modular resource for running a Matter Controller server'
+readme = "README.md"
+requires-python = ">=3.7"
+license = "Apache-2.0"
+keywords = []
+authors = [
+  { name = "HipsterBrown", email = "headhipster@hipsterbrown.com" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "viam-sdk",
+  "python-matter-server[server]==4.0.2",
+  "matter-controller-api @ {root:uri}/../matter-controller-api"
+]
+
 [project.urls]
 Documentation = "https://github.com/viam-labs/viam-matter-server#readme"
 Issues = "https://github.com/viam-labs/viam-matter-server/issues"
 Source = "https://github.com/viam-labs/viam-matter-server"
+
+[tool.hatch.version]
+path = "src/matter_controller_server/__about__.py"
+
+[tool.hatch.metadata]
+allow-direct-references = true
 
 [tool.hatch.envs.default]
 dependencies = [
@@ -35,7 +69,7 @@ dependencies = [
   "ruff>=0.0.243",
 ]
 [tool.hatch.envs.lint.scripts]
-typing = "mypy --install-types --non-interactive {args:src/viam_matter_server tests}"
+typing = "mypy --install-types --non-interactive {args:src/matter-controller-server tests}"
 style = [
   "ruff {args:.}",
   "black --check --diff {args:.}",
@@ -101,7 +135,7 @@ unfixable = [
 ]
 
 [tool.ruff.isort]
-known-first-party = ["viam_matter_server"]
+known-first-party = ["matter-controller-server"]
 
 [tool.ruff.flake8-tidy-imports]
 ban-relative-imports = "all"
@@ -111,16 +145,16 @@ ban-relative-imports = "all"
 "tests/**/*" = ["PLR2004", "S101", "TID252"]
 
 [tool.coverage.run]
-source_pkgs = ["viam_matter_server", "tests"]
+source_pkgs = ["matter-controller-server", "tests"]
 branch = true
 parallel = true
 omit = [
-  "src/viam_matter_server/__about__.py",
+  "src/matter-controller-server/__about__.py",
 ]
 
 [tool.coverage.paths]
-viam_matter_server = ["src/viam_matter_server", "*/viam-matter-server/src/viam_matter_server"]
-tests = ["tests", "*/viam-matter-server/tests"]
+matter_controller_server = ["src/matter-controller-server", "*/matter-controller-server/src/matter_controller_server"]
+tests = ["tests", "*/matter-controller-server/tests"]
 
 [tool.coverage.report]
 exclude_lines = [
