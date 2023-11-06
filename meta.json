@@ -1,0 +1,13 @@
+{
+  "module_id": "viam-labs:matter-controller",
+  "visibility": "private",
+  "url": "https://github.com/viam-labs/viam-matter-server",
+  "description": "A modular resource for running a Matter Controller server",
+  "models": [
+    {
+      "api": "viam-labs:service:matter",
+      "model": "viam-labs:matter:controller"
+    }
+  ],
+  "entrypoint": "run.sh"
+}
