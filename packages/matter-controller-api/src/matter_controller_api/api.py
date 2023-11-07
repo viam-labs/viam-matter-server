@@ -68,7 +68,7 @@ class MatterControllerClient(MatterController):
         super().__init__(name)
 
     async def commission(self, code: str) -> MatterNodeData:
-        request = CommissionRequest(code=code)
+        request = CommissionRequest(name=self.name, code=code)
         response: CommissionResponse = await self.client.Commission(request)
         return MatterNodeData(
             node_id=response.node_id,

@@ -3,3 +3,4 @@ dist/
 .ruff_cache
 .rtx.toml
 module.tar.gz
+__pycache__/

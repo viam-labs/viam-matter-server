@@ -83,6 +83,10 @@ class MatterControllerServer(MatterController, Reconfigurable):
         self.stack.shutdown()
         self.logger.info("Cleanup complete")
 
+    def signal_event(self, evt, data) -> None:
+        self.logger.info(f"Got event {evt} with data {data}")
+        pass
+
 
 Registry.register_resource_creator(
     MatterController.SUBTYPE, MatterControllerServer.MODEL, ResourceCreatorRegistration(MatterControllerServer.new)
