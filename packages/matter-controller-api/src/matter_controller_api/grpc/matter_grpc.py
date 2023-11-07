@@ -6,18 +6,20 @@ import typing
 
 import grpclib.const
 import grpclib.client
+
 if typing.TYPE_CHECKING:
     import grpclib.server
 
 import google.api.annotations_pb2
 import google.protobuf.timestamp_pb2
-import matter_pb2
+from . import matter_pb2
 
 
 class MatterControllerServiceBase(abc.ABC):
-
     @abc.abstractmethod
-    async def Commission(self, stream: 'grpclib.server.Stream[matter_pb2.CommissionRequest, matter_pb2.CommissionResponse]') -> None:
+    async def Commission(
+        self, stream: 'grpclib.server.Stream[matter_pb2.CommissionRequest, matter_pb2.CommissionResponse]'
+    ) -> None:
         pass
 
     def __mapping__(self) -> typing.Dict[str, grpclib.const.Handler]:
@@ -32,7 +34,6 @@ class MatterControllerServiceBase(abc.ABC):
 
 
 class MatterControllerServiceStub:
-
     def __init__(self, channel: grpclib.client.Channel) -> None:
         self.Commission = grpclib.client.UnaryUnaryMethod(
             channel,

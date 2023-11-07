@@ -36,3 +36,8 @@ if [ ! -f .installed ]; then
         touch .installed
     fi
 fi
+
+# CHIP storage relies on /data directory existing on device
+if [ ! -d /data ]; then
+    mkdir /data
+fi
