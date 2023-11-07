@@ -3,7 +3,6 @@
 # SPDX-License-Identifier: Apache-2.0
 import asyncio
 import os
-from pathlib import Path
 from typing import ClassVar, Mapping
 from typing_extensions import Self
 
@@ -13,7 +12,6 @@ from viam.proto.common import ResourceName
 from viam.resource.base import ResourceBase
 from viam.resource.types import Model, ModelFamily
 from viam.module.types import Reconfigurable
-from viam.services.service_base import ServiceBase
 from viam.resource.registry import Registry, ResourceCreatorRegistration
 
 from matter_controller_api import MatterController, MatterNodeData
