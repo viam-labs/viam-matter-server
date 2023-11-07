@@ -23,13 +23,13 @@ else
 fi
 
 source .env
-if [ ! -d "${VIRTUAL_ENV:=.venv}"]; then
+if [ ! -d "${VIRTUAL_ENV:=.venv}" ]; then
     echo "creating virtualenv at $VIRTUAL_ENV"
     python3 -m venv $VIRTUAL_ENV
 fi
 if [ ! -f .installed ]; then
-    echo "installling dependencies from requirements.txt"
-    $VIRTUAL_ENV/bin/pip install .
+    echo "installling dependencies from wheel"
+    $VIRTUAL_ENV/bin/pip install dist/*.whl
 
     if [ $? -eq 0 ]; then
         touch .installed

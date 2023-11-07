@@ -2,3 +2,4 @@ dist/
 .mypy_cache
 .ruff_cache
 .rtx.toml
+module.tar.gz

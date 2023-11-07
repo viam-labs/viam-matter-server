@@ -6,7 +6,7 @@ from typing import Final, Any
 
 from grpclib.client import Channel
 from grpclib.server import Stream
-from viam.resource.registry import ResourceRPCServiceBase
+from viam.resource.rpc_service_base import ResourceRPCServiceBase
 from viam.resource.types import RESOURCE_TYPE_SERVICE, Subtype
 from viam.services.service_base import ServiceBase
 from viam.logging import getLogger
