@@ -1,0 +1,8 @@
+version: v1
+plugins:
+  - name: python
+    out: matter_controller_api/grpc
+  - name: grpclib_python
+    out: matter_controller_api/grpc
+  - name: mypy
+    out: matter_controller_api/grpc

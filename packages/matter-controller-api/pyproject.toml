@@ -24,7 +24,9 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = []
+dependencies = [
+  "viam-sdk"
+]
 
 [project.urls]
 Documentation = "https://github.com/viam-labs/viam-matter-server#readme"

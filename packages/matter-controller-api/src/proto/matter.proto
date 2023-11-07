@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package viamlabs.service.matter_controller.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+service MatterControllerService {
+  rpc Commission(CommissionRequest) returns (CommissionResponse) {
+    option (google.api.http) = {
+      post: "/viamlabs/api/v1/service/matter_controller/{name}/commission"
+    };
+  }
+}
+
+message CommissionRequest {
+  string name = 1;
+  string code = 2;
+}
+
+message CommissionResponse {
+  int32 node_id = 1;
+  google.protobuf.Timestamp date_commissioned = 2;
+  google.protobuf.Timestamp last_interview = 3;
+  int32 interview_version = 4;
+  bool available = 5;
+  bool is_bridge = 6;
+  string attributes = 7;
+  float last_subscription_attempt = 8;
+}
