@@ -55,7 +55,7 @@ class MatterControllerRPCService(MatterControllerServiceBase, ResourceRPCService
             interview_version=response.interview_version,
             available=response.available,
             is_bridge=response.is_bridge,
-            attributes=json.dumps(response.attributes),
+            attributes="{}",
             last_subscription_attempt=response.last_subscription_attempt,
         )
         await stream.send_message(message)
