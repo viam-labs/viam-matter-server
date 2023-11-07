@@ -29,7 +29,8 @@ if [ ! -d "${VIRTUAL_ENV:=.venv}" ]; then
 fi
 if [ ! -f .installed ]; then
     echo "installling dependencies from wheel"
-    $VIRTUAL_ENV/bin/pip install dist/*.whl
+    package="$(ls dist/ | grep whl)"
+    $VIRTUAL_ENV/bin/pip install ./dist/$package[prod]
 
     if [ $? -eq 0 ]; then
         touch .installed
