@@ -2,7 +2,7 @@ import abc
 import json
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Final, Any, List, cast
+from typing import Final, Any, List, cast, Optional
 
 from grpclib.client import Channel
 from grpclib.server import Stream
