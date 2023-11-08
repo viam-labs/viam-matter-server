@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 import asyncio
 import os
-from typing import ClassVar, Mapping
+from typing import ClassVar, Mapping, List
 from typing_extensions import Self
 
 from viam.logging import getLogger
@@ -74,7 +74,7 @@ class MatterControllerServer(MatterController, Reconfigurable):
 
     async def discover(self) -> List[CommissionableNode]:
         data = await self.device_controller.discover_commissionable_nodes()
-        if type(data) is not list:
+        if isinstance(data, list) is False:
             return [data]
         return data
 

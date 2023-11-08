@@ -93,7 +93,33 @@ class MatterControllerRPCService(MatterControllerServiceBase, ResourceRPCService
         service = self.get_resource(name)
         response = await service.discover()
         LOGGER.info(response)
-        message = DiscoverResponse(nodes=response if response is not None else [])
+        nodes = (
+            [
+                DiscoverResponse.CommissionableNode(
+                    instanceName=node.instanceName,
+                    hostName=node.hostName,
+                    port=node.port,
+                    longDiscriminator=node.longDiscriminator,
+                    vendorId=node.vendorId,
+                    productId=node.productId,
+                    commissioningMode=node.commissioningMode,
+                    deviceType=node.deviceType,
+                    deviceName=node.deviceName,
+                    pairingInstruction=node.pairingInstruction,
+                    pairingHint=node.pairingHint,
+                    mrpRetryIntervalIdle=node.mrpRetryIntervalIdle,
+                    mrpRetryIntervalActive=node.mrpRetryIntervalActive,
+                    mrpRetryActiveThreshold=node.mrpRetryActiveThreshold,
+                    supportsTcp=node.supportsTcp,
+                    addresses=node.addresses,
+                    rotatingId=node.rotatingId,
+                )
+                for node in response.nodes
+            ]
+            if response is not None
+            else []
+        )
+        message = DiscoverResponse(nodes=nodes)
         await stream.send_message(message)
 
 
