@@ -3,7 +3,9 @@
 isort:skip_file
 """
 import builtins
+import collections.abc
 import google.protobuf.descriptor
+import google.protobuf.internal.containers
 import google.protobuf.message
 import google.protobuf.timestamp_pb2
 import sys
@@ -71,3 +73,101 @@ class CommissionResponse(google.protobuf.message.Message):
     def ClearField(self, field_name: typing_extensions.Literal["attributes", b"attributes", "available", b"available", "date_commissioned", b"date_commissioned", "interview_version", b"interview_version", "is_bridge", b"is_bridge", "last_interview", b"last_interview", "last_subscription_attempt", b"last_subscription_attempt", "node_id", b"node_id"]) -> None: ...
 
 global___CommissionResponse = CommissionResponse
+
+@typing_extensions.final
+class DiscoverRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    NAME_FIELD_NUMBER: builtins.int
+    name: builtins.str
+    def __init__(
+        self,
+        *,
+        name: builtins.str = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["name", b"name"]) -> None: ...
+
+global___DiscoverRequest = DiscoverRequest
+
+@typing_extensions.final
+class DiscoverResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    @typing_extensions.final
+    class CommissionableNode(google.protobuf.message.Message):
+        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+        INSTANCENAME_FIELD_NUMBER: builtins.int
+        HOSTNAME_FIELD_NUMBER: builtins.int
+        PORT_FIELD_NUMBER: builtins.int
+        LONGDISCRIMINATOR_FIELD_NUMBER: builtins.int
+        VENDORID_FIELD_NUMBER: builtins.int
+        PRODUCTID_FIELD_NUMBER: builtins.int
+        COMMISSIONINGMODE_FIELD_NUMBER: builtins.int
+        DEVICETYPE_FIELD_NUMBER: builtins.int
+        DEVICENAME_FIELD_NUMBER: builtins.int
+        PAIRINGINSTRUCTION_FIELD_NUMBER: builtins.int
+        PAIRINGHINT_FIELD_NUMBER: builtins.int
+        MRPRETRYINTERVALIDLE_FIELD_NUMBER: builtins.int
+        MRPRETRYINTERVALACTIVE_FIELD_NUMBER: builtins.int
+        MRPRETRYACTIVETHRESHOLD_FIELD_NUMBER: builtins.int
+        SUPPORTSTCP_FIELD_NUMBER: builtins.int
+        ISICDOPERATINGASLIT_FIELD_NUMBER: builtins.int
+        ADDRESSES_FIELD_NUMBER: builtins.int
+        ROTATINGID_FIELD_NUMBER: builtins.int
+        instanceName: builtins.str
+        hostName: builtins.str
+        port: builtins.int
+        longDiscriminator: builtins.int
+        vendorId: builtins.int
+        productId: builtins.int
+        commissioningMode: builtins.int
+        deviceType: builtins.int
+        deviceName: builtins.str
+        pairingInstruction: builtins.str
+        pairingHint: builtins.int
+        mrpRetryIntervalIdle: builtins.int
+        mrpRetryIntervalActive: builtins.int
+        mrpRetryActiveThreshold: builtins.int
+        supportsTcp: builtins.bool
+        isICDOperatingAsLIT: builtins.bool
+        @property
+        def addresses(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
+        rotatingId: builtins.str
+        def __init__(
+            self,
+            *,
+            instanceName: builtins.str = ...,
+            hostName: builtins.str = ...,
+            port: builtins.int = ...,
+            longDiscriminator: builtins.int = ...,
+            vendorId: builtins.int = ...,
+            productId: builtins.int = ...,
+            commissioningMode: builtins.int = ...,
+            deviceType: builtins.int = ...,
+            deviceName: builtins.str = ...,
+            pairingInstruction: builtins.str = ...,
+            pairingHint: builtins.int = ...,
+            mrpRetryIntervalIdle: builtins.int = ...,
+            mrpRetryIntervalActive: builtins.int = ...,
+            mrpRetryActiveThreshold: builtins.int = ...,
+            supportsTcp: builtins.bool = ...,
+            isICDOperatingAsLIT: builtins.bool = ...,
+            addresses: collections.abc.Iterable[builtins.str] | None = ...,
+            rotatingId: builtins.str | None = ...,
+        ) -> None: ...
+        def HasField(self, field_name: typing_extensions.Literal["_rotatingId", b"_rotatingId", "rotatingId", b"rotatingId"]) -> builtins.bool: ...
+        def ClearField(self, field_name: typing_extensions.Literal["_rotatingId", b"_rotatingId", "addresses", b"addresses", "commissioningMode", b"commissioningMode", "deviceName", b"deviceName", "deviceType", b"deviceType", "hostName", b"hostName", "instanceName", b"instanceName", "isICDOperatingAsLIT", b"isICDOperatingAsLIT", "longDiscriminator", b"longDiscriminator", "mrpRetryActiveThreshold", b"mrpRetryActiveThreshold", "mrpRetryIntervalActive", b"mrpRetryIntervalActive", "mrpRetryIntervalIdle", b"mrpRetryIntervalIdle", "pairingHint", b"pairingHint", "pairingInstruction", b"pairingInstruction", "port", b"port", "productId", b"productId", "rotatingId", b"rotatingId", "supportsTcp", b"supportsTcp", "vendorId", b"vendorId"]) -> None: ...
+        def WhichOneof(self, oneof_group: typing_extensions.Literal["_rotatingId", b"_rotatingId"]) -> typing_extensions.Literal["rotatingId"] | None: ...
+
+    NODES_FIELD_NUMBER: builtins.int
+    @property
+    def nodes(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___DiscoverResponse.CommissionableNode]: ...
+    def __init__(
+        self,
+        *,
+        nodes: collections.abc.Iterable[global___DiscoverResponse.CommissionableNode] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["nodes", b"nodes"]) -> None: ...
+
+global___DiscoverResponse = DiscoverResponse

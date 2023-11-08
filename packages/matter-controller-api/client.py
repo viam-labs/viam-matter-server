@@ -25,9 +25,10 @@ async def main():
     robot = await connect()
 
     controller = MatterController.from_robot(robot, name=controller_name)
-    matter_node = await controller.commission(code=device_code)
+    # matter_node = await controller.commission(code=device_code)
+    discovered_nodes = await controller.discover()
 
-    LOGGER.info(matter_node)
+    LOGGER.info(discovered_nodes)
 
     await robot.close()
 

@@ -11,6 +11,12 @@ service MatterControllerService {
       post: "/viamlabs/api/v1/service/matter_controller/{name}/commission"
     };
   }
+
+  rpc Discover(DiscoverRequest) returns (DiscoverResponse) {
+    option (google.api.http) = {
+      post: "/viamlabs/api/v1/service/matter_controller/{name}/discover"
+    };
+  }
 }
 
 message CommissionRequest {
@@ -27,4 +33,33 @@ message CommissionResponse {
   bool is_bridge = 6;
   string attributes = 7;
   float last_subscription_attempt = 8;
+}
+
+message DiscoverRequest {
+  string name = 1;
+}
+
+message DiscoverResponse {
+  message CommissionableNode {
+    string instanceName = 1;
+    string hostName = 2;
+    int64 port = 3;
+    int64 longDiscriminator = 4;
+    int64 vendorId = 5;
+    int64 productId = 6;
+    int32 commissioningMode = 7;
+    int32 deviceType = 8;
+    string deviceName = 9;
+    string pairingInstruction = 10;
+    int32 pairingHint = 11;
+    int32 mrpRetryIntervalIdle = 12;
+    int32 mrpRetryIntervalActive = 13;
+    int32 mrpRetryActiveThreshold = 14;
+    bool supportsTcp = 15;
+    bool isICDOperatingAsLIT = 16;
+    repeated string addresses = 17;
+    optional string rotatingId = 18;
+  }
+
+  repeated CommissionableNode nodes = 1;
 }

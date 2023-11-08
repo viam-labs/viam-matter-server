@@ -2,7 +2,7 @@ import abc
 import json
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Final, Any
+from typing import Final, Any, List, cast
 
 from grpclib.client import Channel
 from grpclib.server import Stream
@@ -13,7 +13,7 @@ from viam.logging import getLogger
 from viam.utils import datetime_to_timestamp
 
 from .grpc.matter_grpc import MatterControllerServiceBase, MatterControllerServiceStub
-from .grpc.matter_pb2 import CommissionRequest, CommissionResponse
+from .grpc.matter_pb2 import CommissionRequest, CommissionResponse, DiscoverRequest, DiscoverResponse
 
 LOGGER = getLogger(__name__)
 
@@ -30,11 +30,37 @@ class MatterNodeData:
     last_subscription_attempt: float = 0
 
 
+@dataclass
+class CommissionableNode:
+    instanceName: str = None
+    hostName: str = None
+    port: int = None
+    longDiscriminator: int = None
+    vendorId: int = None
+    productId: int = None
+    commissioningMode: int = None
+    deviceType: int = None
+    deviceName: str = None
+    pairingInstruction: str = None
+    pairingHint: int = None
+    mrpRetryIntervalIdle: int = None
+    mrpRetryIntervalActive: int = None
+    mrpRetryActiveThreshold: int = None
+    supportsTcp: bool = None
+    isICDOperatingAsLIT: bool = None
+    addresses: List[str] = None
+    rotatingId: Optional[str] = None
+
+
 class MatterController(ServiceBase):
     SUBTYPE: Final = Subtype("viam-labs", RESOURCE_TYPE_SERVICE, "matter")
 
     @abc.abstractmethod
     async def commission(self, code: str) -> MatterNodeData:
+        ...
+
+    @abc.abstractmethod
+    async def discover(self) -> List[CommissionableNode]:
         ...
 
 
@@ -60,6 +86,16 @@ class MatterControllerRPCService(MatterControllerServiceBase, ResourceRPCService
         )
         await stream.send_message(message)
 
+    async def Discover(self, stream: Stream[DiscoverRequest, DiscoverResponse]) -> None:
+        request = await stream.recv_message()
+        assert request is not None
+        name = request.name
+        service = self.get_resource(name)
+        response = await service.discover()
+        LOGGER.info(response)
+        message = DiscoverResponse(nodes=response if response is not None else [])
+        await stream.send_message(message)
+
 
 class MatterControllerClient(MatterController):
     def __init__(self, name: str, channel: Channel) -> None:
@@ -80,3 +116,8 @@ class MatterControllerClient(MatterController):
             attributes=json.loads(response.attributes),
             last_subscription_attempt=response.last_subscription_attempt,
         )
+
+    async def discover(self) -> List[CommissionableNode]:
+        request = DiscoverRequest(name=self.name)
+        response: DiscoverResponse = await self.client.Discover(request)
+        return cast(list, response.nodes)

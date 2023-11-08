@@ -6,7 +6,6 @@ import typing
 
 import grpclib.const
 import grpclib.client
-
 if typing.TYPE_CHECKING:
     import grpclib.server
 
@@ -16,10 +15,13 @@ from . import matter_pb2
 
 
 class MatterControllerServiceBase(abc.ABC):
+
     @abc.abstractmethod
-    async def Commission(
-        self, stream: 'grpclib.server.Stream[matter_pb2.CommissionRequest, matter_pb2.CommissionResponse]'
-    ) -> None:
+    async def Commission(self, stream: 'grpclib.server.Stream[matter_pb2.CommissionRequest, matter_pb2.CommissionResponse]') -> None:
+        pass
+
+    @abc.abstractmethod
+    async def Discover(self, stream: 'grpclib.server.Stream[matter_pb2.DiscoverRequest, matter_pb2.DiscoverResponse]') -> None:
         pass
 
     def __mapping__(self) -> typing.Dict[str, grpclib.const.Handler]:
@@ -30,14 +32,27 @@ class MatterControllerServiceBase(abc.ABC):
                 matter_pb2.CommissionRequest,
                 matter_pb2.CommissionResponse,
             ),
+            '/viamlabs.service.matter_controller.v1.MatterControllerService/Discover': grpclib.const.Handler(
+                self.Discover,
+                grpclib.const.Cardinality.UNARY_UNARY,
+                matter_pb2.DiscoverRequest,
+                matter_pb2.DiscoverResponse,
+            ),
         }
 
 
 class MatterControllerServiceStub:
+
     def __init__(self, channel: grpclib.client.Channel) -> None:
         self.Commission = grpclib.client.UnaryUnaryMethod(
             channel,
             '/viamlabs.service.matter_controller.v1.MatterControllerService/Commission',
             matter_pb2.CommissionRequest,
             matter_pb2.CommissionResponse,
+        )
+        self.Discover = grpclib.client.UnaryUnaryMethod(
+            channel,
+            '/viamlabs.service.matter_controller.v1.MatterControllerService/Discover',
+            matter_pb2.DiscoverRequest,
+            matter_pb2.DiscoverResponse,
         )

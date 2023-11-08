@@ -14,7 +14,7 @@ from viam.resource.types import Model, ModelFamily
 from viam.module.types import Reconfigurable
 from viam.resource.registry import Registry, ResourceCreatorRegistration
 
-from matter_controller_api import MatterController, MatterNodeData
+from matter_controller_api import MatterController, MatterNodeData, CommissionableNode
 
 from matter_server.server.device_controller import MatterDeviceController
 from matter_server.server.stack import MatterStack
@@ -70,6 +70,12 @@ class MatterControllerServer(MatterController, Reconfigurable):
 
     async def commission(self, code: str) -> MatterNodeData:
         data = await self.device_controller.commission_with_code(code)
+        return data
+
+    async def discover(self) -> List[CommissionableNode]:
+        data = await self.device_controller.discover_commissionable_nodes()
+        if type(data) is not list:
+            return [data]
         return data
 
     async def close(self):
