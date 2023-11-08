@@ -109,12 +109,12 @@ class MatterControllerRPCService(MatterControllerServiceBase, ResourceRPCService
                     pairingHint=node.pairingHint,
                     mrpRetryIntervalIdle=node.mrpRetryIntervalIdle,
                     mrpRetryIntervalActive=node.mrpRetryIntervalActive,
-                    mrpRetryActiveThreshold=node.mrpRetryActiveThreshold,
+                    mrpRetryActiveThreshold=0,
                     supportsTcp=node.supportsTcp,
                     addresses=node.addresses,
                     rotatingId=node.rotatingId,
                 )
-                for node in response.nodes
+                for node in response
             ]
             if response is not None
             else []
