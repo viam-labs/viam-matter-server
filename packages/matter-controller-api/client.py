@@ -25,10 +25,14 @@ async def main():
     robot = await connect()
 
     controller = MatterController.from_robot(robot, name=controller_name)
-    # matter_node = await controller.commission(code=device_code)
-    discovered_nodes = await controller.discover()
+    matter_node = await controller.commission(code=device_code)
+    LOGGER.info(matter_node)
 
-    LOGGER.info(discovered_nodes)
+    LOGGER.info(f"Toggling light on Node {matter_node.node_id}")
+    success = await controller.command_device(
+        node_id=matter_node.node_id, endpoint_id=1, command_name="LIGHT_TOGGLE", payload={}
+    )
+    LOGGER.info(f"Toggled light? {success}")
 
     await robot.close()
 

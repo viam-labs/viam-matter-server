@@ -38,6 +38,7 @@ class MatterNodeData:
     is_bridge: bool = False
     attributes: dict[str, Any] = field(default_factory=dict)
     last_subscription_attempt: float = 0
+    endpoint_ids: List[int]
 
 
 @dataclass
@@ -92,17 +93,18 @@ class MatterControllerRPCService(MatterControllerServiceBase, ResourceRPCService
         assert request is not None
         name = request.name
         service = self.get_resource(name)
-        response = await service.commission(request.code)
+        response: dict = await service.commission(request.code)
         LOGGER.info(response)
         message = CommissionResponse(
-            node_id=response.node_id,
-            date_commissioned=datetime_to_timestamp(response.date_commissioned),
-            last_interview=datetime_to_timestamp(response.last_interview),
-            interview_version=response.interview_version,
-            available=response.available,
-            is_bridge=response.is_bridge,
-            attributes="{}",
+            node_id=response.get("node_id"),
+            date_commissioned=datetime_to_timestamp(response.get("date_commissioned")),
+            last_interview=datetime_to_timestamp(response.get("last_interview")),
+            interview_version=response.get("interview_version"),
+            available=response.get("available"),
+            is_bridge=response.get("is_bridge"),
+            attributes=response.get("attributes"),
             last_subscription_attempt=response.last_subscription_attempt,
+            endpoint_ids=response.get("endpoint_ids"),
         )
         await stream.send_message(message)
 
@@ -174,6 +176,7 @@ class MatterControllerClient(MatterController):
             is_bridge=response.is_bridge,
             attributes=json.loads(response.attributes),
             last_subscription_attempt=response.last_subscription_attempt,
+            endpoint_ids=response.endpoint_ids,
         )
 
     async def discover(self) -> List[CommissionableNode]:

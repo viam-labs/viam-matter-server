@@ -66,6 +66,7 @@ class CommissionResponse(google.protobuf.message.Message):
     IS_BRIDGE_FIELD_NUMBER: builtins.int
     ATTRIBUTES_FIELD_NUMBER: builtins.int
     LAST_SUBSCRIPTION_ATTEMPT_FIELD_NUMBER: builtins.int
+    ENDPOINT_IDS_FIELD_NUMBER: builtins.int
     node_id: builtins.int
     @property
     def date_commissioned(self) -> google.protobuf.timestamp_pb2.Timestamp: ...
@@ -76,6 +77,8 @@ class CommissionResponse(google.protobuf.message.Message):
     is_bridge: builtins.bool
     attributes: builtins.str
     last_subscription_attempt: builtins.float
+    @property
+    def endpoint_ids(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
     def __init__(
         self,
         *,
@@ -87,9 +90,10 @@ class CommissionResponse(google.protobuf.message.Message):
         is_bridge: builtins.bool = ...,
         attributes: builtins.str = ...,
         last_subscription_attempt: builtins.float = ...,
+        endpoint_ids: collections.abc.Iterable[builtins.int] | None = ...,
     ) -> None: ...
     def HasField(self, field_name: typing_extensions.Literal["date_commissioned", b"date_commissioned", "last_interview", b"last_interview"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["attributes", b"attributes", "available", b"available", "date_commissioned", b"date_commissioned", "interview_version", b"interview_version", "is_bridge", b"is_bridge", "last_interview", b"last_interview", "last_subscription_attempt", b"last_subscription_attempt", "node_id", b"node_id"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["attributes", b"attributes", "available", b"available", "date_commissioned", b"date_commissioned", "endpoint_ids", b"endpoint_ids", "interview_version", b"interview_version", "is_bridge", b"is_bridge", "last_interview", b"last_interview", "last_subscription_attempt", b"last_subscription_attempt", "node_id", b"node_id"]) -> None: ...
 
 global___CommissionResponse = CommissionResponse
 

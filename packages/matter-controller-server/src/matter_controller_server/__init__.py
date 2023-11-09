@@ -73,12 +73,11 @@ class MatterControllerServer(MatterController, Reconfigurable):
         await self.vendor_info.start()
         self.logger.info("Server started!")
 
-    async def commission(self, code: str) -> MatterNodeData:
-        data = await self.device_controller.commission_with_code(code)
-        self.logger.info(data)
-        node = MatterNode(data)
-        self.logger.info(node)
-        self.logger.info(node.endpoints)
+    async def commission(self, code: str) -> dict:
+        node_data = await self.device_controller.commission_with_code(code)
+        node = MatterNode(node_data)
+        data = dataclass_to_dict(node_data)
+        data["endpoint_ids"] = [id for id in node.endpoints.keys()]
         return data
 
     async def discover(self) -> List[CommissionableNode]:
@@ -90,8 +89,7 @@ class MatterControllerServer(MatterController, Reconfigurable):
     async def command_device(self, node_id: int, endpoint_id: int, command_name: CommandString, payload: str) -> bool:
         command = self._get_command_from_string(command_name, json.loads(payload))
         assert command is not None
-        self.logger.info(command)
-        self.logger.info(dataclass_to_dict(command))
+        self.logger.info(f"Received command: {command}")
         data = await self.device_controller.send_device_command(
             node_id=node_id,
             endpoint_id=endpoint_id,
@@ -99,7 +97,7 @@ class MatterControllerServer(MatterController, Reconfigurable):
             command_name=command.__class__.__name__,
             payload=dataclass_to_dict(command),
         )
-        self.logger.info(data)
+        self.logger.info(f"Command response: {data}")
         return True
 
     async def close(self):

@@ -39,6 +39,7 @@ message CommissionResponse {
   bool is_bridge = 6;
   string attributes = 7;
   float last_subscription_attempt = 8;
+  repeated int32 endpoint_ids = 9;
 }
 
 message DiscoverRequest {
