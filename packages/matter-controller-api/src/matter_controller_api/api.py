@@ -1,8 +1,9 @@
+from __future__ import annotations
 import abc
 import json
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Final, Any, List, cast, Optional
+from typing import Final, Any, List, cast, Optional, Literal, NewType
 
 from grpclib.client import Channel
 from grpclib.server import Stream
@@ -13,9 +14,18 @@ from viam.logging import getLogger
 from viam.utils import datetime_to_timestamp
 
 from .grpc.matter_grpc import MatterControllerServiceBase, MatterControllerServiceStub
-from .grpc.matter_pb2 import CommissionRequest, CommissionResponse, DiscoverRequest, DiscoverResponse
+from .grpc.matter_pb2 import (
+    CommissionRequest,
+    CommissionResponse,
+    DiscoverRequest,
+    DiscoverResponse,
+    CommandRequest,
+    CommandResponse,
+    Command,
+)
 
 LOGGER = getLogger(__name__)
+CommandString = Literal["LIGHT_TOGGLE", "LIGHT_ON", "LIGHT_OFF"]
 
 
 @dataclass
@@ -32,23 +42,23 @@ class MatterNodeData:
 
 @dataclass
 class CommissionableNode:
-    instanceName: str = None
-    hostName: str = None
-    port: int = None
-    longDiscriminator: int = None
-    vendorId: int = None
-    productId: int = None
-    commissioningMode: int = None
-    deviceType: int = None
-    deviceName: str = None
-    pairingInstruction: str = None
-    pairingHint: int = None
-    mrpRetryIntervalIdle: int = None
-    mrpRetryIntervalActive: int = None
-    mrpRetryActiveThreshold: int = None
-    supportsTcp: bool = None
-    isICDOperatingAsLIT: bool = None
-    addresses: List[str] = None
+    instanceName: str | None = None
+    hostName: str | None = None
+    port: int | None = None
+    longDiscriminator: int | None = None
+    vendorId: int | None = None
+    productId: int | None = None
+    commissioningMode: int | None = None
+    deviceType: int | None = None
+    deviceName: str | None = None
+    pairingInstruction: str | None = None
+    pairingHint: int | None = None
+    mrpRetryIntervalIdle: int | None = None
+    mrpRetryIntervalActive: int | None = None
+    mrpRetryActiveThreshold: int | None = None
+    supportsTcp: bool | None = None
+    isICDOperatingAsLIT: bool | None = None
+    addresses: List[str] | None = None
     rotatingId: Optional[str] = None
 
 
@@ -61,6 +71,16 @@ class MatterController(ServiceBase):
 
     @abc.abstractmethod
     async def discover(self) -> List[CommissionableNode]:
+        ...
+
+    @abc.abstractmethod
+    async def command_device(
+        self,
+        node_id: int,
+        endpoint_id: int,
+        command_name: CommandString,
+        payload: dict,
+    ) -> bool:
         ...
 
 
@@ -122,6 +142,19 @@ class MatterControllerRPCService(MatterControllerServiceBase, ResourceRPCService
         message = DiscoverResponse(nodes=nodes)
         await stream.send_message(message)
 
+    async def CommandDevice(self, stream: Stream[CommandRequest, CommandResponse]):
+        request = await stream.recv_message()
+        assert request is not None
+        name = request.name
+        service = self.get_resource(name)
+        response = await service.command_device(
+            node_id=request.node_id,
+            endpoint_id=request.endpoint_id,
+            command_name=Command.Name(request.command_name),
+            payload=request.payload,
+        )
+        await stream.send_message(CommandResponse(success=response))
+
 
 class MatterControllerClient(MatterController):
     def __init__(self, name: str, channel: Channel) -> None:
@@ -147,3 +180,20 @@ class MatterControllerClient(MatterController):
         request = DiscoverRequest(name=self.name)
         response: DiscoverResponse = await self.client.Discover(request)
         return cast(list, response.nodes)
+
+    async def command_device(
+        self,
+        node_id: int,
+        endpoint_id: int,
+        command_name: CommandString,
+        payload: dict,
+    ) -> bool:
+        request = CommandRequest(
+            name=self.name,
+            node_id=node_id,
+            endpoint_id=endpoint_id,
+            command_name=Command.Value(command_name),
+            payload=json.dumps(payload),
+        )
+        response: CommandResponse = await self.client.CommandDevice(request)
+        return response.success

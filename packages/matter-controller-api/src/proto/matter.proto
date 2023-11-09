@@ -17,6 +17,12 @@ service MatterControllerService {
       post: "/viamlabs/api/v1/service/matter_controller/{name}/discover"
     };
   }
+
+  rpc CommandDevice(CommandRequest) returns (CommandResponse) {
+    option (google.api.http) = {
+      post: "/viamlabs/api/v1/service/matter_controller/{name}/command_device"
+    };
+  }
 }
 
 message CommissionRequest {
@@ -62,4 +68,22 @@ message DiscoverResponse {
   }
 
   repeated CommissionableNode nodes = 1;
+}
+
+enum Command {
+  LIGHT_TOGGLE = 0;
+  LIGHT_ON = 1;
+  LIGHT_OFF = 2;
+}
+
+message CommandRequest {
+  string name = 1;
+  int32 node_id = 2;
+  int32 endpoint_id = 3;
+  Command command_name = 5;
+  string payload = 6;
+}
+
+message CommandResponse {
+  bool success = 1;
 }

@@ -6,16 +6,35 @@ import builtins
 import collections.abc
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
+import google.protobuf.internal.enum_type_wrapper
 import google.protobuf.message
 import google.protobuf.timestamp_pb2
 import sys
+import typing
 
-if sys.version_info >= (3, 8):
+if sys.version_info >= (3, 10):
     import typing as typing_extensions
 else:
     import typing_extensions
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+
+class _Command:
+    ValueType = typing.NewType("ValueType", builtins.int)
+    V: typing_extensions.TypeAlias = ValueType
+
+class _CommandEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_Command.ValueType], builtins.type):
+    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+    LIGHT_TOGGLE: _Command.ValueType  # 0
+    LIGHT_ON: _Command.ValueType  # 1
+    LIGHT_OFF: _Command.ValueType  # 2
+
+class Command(_Command, metaclass=_CommandEnumTypeWrapper): ...
+
+LIGHT_TOGGLE: Command.ValueType  # 0
+LIGHT_ON: Command.ValueType  # 1
+LIGHT_OFF: Command.ValueType  # 2
+global___Command = Command
 
 @typing_extensions.final
 class CommissionRequest(google.protobuf.message.Message):
@@ -171,3 +190,45 @@ class DiscoverResponse(google.protobuf.message.Message):
     def ClearField(self, field_name: typing_extensions.Literal["nodes", b"nodes"]) -> None: ...
 
 global___DiscoverResponse = DiscoverResponse
+
+@typing_extensions.final
+class CommandRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    NAME_FIELD_NUMBER: builtins.int
+    NODE_ID_FIELD_NUMBER: builtins.int
+    ENDPOINT_ID_FIELD_NUMBER: builtins.int
+    COMMAND_NAME_FIELD_NUMBER: builtins.int
+    PAYLOAD_FIELD_NUMBER: builtins.int
+    name: builtins.str
+    node_id: builtins.int
+    endpoint_id: builtins.int
+    command_name: global___Command.ValueType
+    payload: builtins.str
+    def __init__(
+        self,
+        *,
+        name: builtins.str = ...,
+        node_id: builtins.int = ...,
+        endpoint_id: builtins.int = ...,
+        command_name: global___Command.ValueType = ...,
+        payload: builtins.str = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["command_name", b"command_name", "endpoint_id", b"endpoint_id", "name", b"name", "node_id", b"node_id", "payload", b"payload"]) -> None: ...
+
+global___CommandRequest = CommandRequest
+
+@typing_extensions.final
+class CommandResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    SUCCESS_FIELD_NUMBER: builtins.int
+    success: builtins.bool
+    def __init__(
+        self,
+        *,
+        success: builtins.bool = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["success", b"success"]) -> None: ...
+
+global___CommandResponse = CommandResponse

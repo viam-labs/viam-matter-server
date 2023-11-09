@@ -9,6 +9,7 @@ from .api import (
     MatterController,
     MatterNodeData,
     CommissionableNode,
+    CommandString,
 )
 
 Registry.register_subtype(

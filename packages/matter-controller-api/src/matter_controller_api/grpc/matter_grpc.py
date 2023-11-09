@@ -24,6 +24,10 @@ class MatterControllerServiceBase(abc.ABC):
     async def Discover(self, stream: 'grpclib.server.Stream[matter_pb2.DiscoverRequest, matter_pb2.DiscoverResponse]') -> None:
         pass
 
+    @abc.abstractmethod
+    async def CommandDevice(self, stream: 'grpclib.server.Stream[matter_pb2.CommandRequest, matter_pb2.CommandResponse]') -> None:
+        pass
+
     def __mapping__(self) -> typing.Dict[str, grpclib.const.Handler]:
         return {
             '/viamlabs.service.matter_controller.v1.MatterControllerService/Commission': grpclib.const.Handler(
@@ -37,6 +41,12 @@ class MatterControllerServiceBase(abc.ABC):
                 grpclib.const.Cardinality.UNARY_UNARY,
                 matter_pb2.DiscoverRequest,
                 matter_pb2.DiscoverResponse,
+            ),
+            '/viamlabs.service.matter_controller.v1.MatterControllerService/CommandDevice': grpclib.const.Handler(
+                self.CommandDevice,
+                grpclib.const.Cardinality.UNARY_UNARY,
+                matter_pb2.CommandRequest,
+                matter_pb2.CommandResponse,
             ),
         }
 
@@ -55,4 +65,10 @@ class MatterControllerServiceStub:
             '/viamlabs.service.matter_controller.v1.MatterControllerService/Discover',
             matter_pb2.DiscoverRequest,
             matter_pb2.DiscoverResponse,
+        )
+        self.CommandDevice = grpclib.client.UnaryUnaryMethod(
+            channel,
+            '/viamlabs.service.matter_controller.v1.MatterControllerService/CommandDevice',
+            matter_pb2.CommandRequest,
+            matter_pb2.CommandResponse,
         )
