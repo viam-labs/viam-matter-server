@@ -2,7 +2,8 @@ import asyncio
 
 from viam.module.module import Module
 from matter_controller_api import MatterController
-from .matter_controller_server import MatterControllerServer
+from matter_controller_server import MatterControllerServer
+
 
 async def main():
     """This function creates and starts a new module, after adding all the desired resources."""

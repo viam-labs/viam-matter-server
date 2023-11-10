@@ -3,7 +3,7 @@ import abc
 import json
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Final, Any, List, cast, Optional, Literal, NewType
+from typing import Final, Any, List, cast, Optional, Literal
 
 from grpclib.client import Channel
 from grpclib.server import Stream
@@ -38,7 +38,7 @@ class MatterNodeData:
     is_bridge: bool = False
     attributes: dict[str, Any] = field(default_factory=dict)
     last_subscription_attempt: float = 0
-    endpoint_ids: List[int]
+    endpoint_ids: list[int] = field(default_factory=list)
 
 
 @dataclass
@@ -59,7 +59,7 @@ class CommissionableNode:
     mrpRetryActiveThreshold: int | None = None
     supportsTcp: bool | None = None
     isICDOperatingAsLIT: bool | None = None
-    addresses: List[str] | None = None
+    addresses: list[str] | None = None
     rotatingId: Optional[str] = None
 
 

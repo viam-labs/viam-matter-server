@@ -10,7 +10,6 @@ from viam.rpc.dial import Credentials, DialOptions
 robot_secret = os.getenv('ROBOT_SECRET') or ''
 robot_address = os.getenv('ROBOT_ADDRESS') or ''
 controller_name = os.getenv('MATTER_CONTROLLER_NAME') or 'matter-controller'
-device_code = os.getenv('DEVICE_CODE') or ''
 
 LOGGER = getLogger(__name__)
 
@@ -25,12 +24,13 @@ async def main():
     robot = await connect()
 
     controller = MatterController.from_robot(robot, name=controller_name)
+    device_code = input("What is the pairing code for your device?")
     matter_node = await controller.commission(code=device_code)
     LOGGER.info(matter_node)
 
     LOGGER.info(f"Toggling light on Node {matter_node.node_id}")
     success = await controller.command_device(
-        node_id=matter_node.node_id, endpoint_id=1, command_name="LIGHT_TOGGLE", payload={}
+        node_id=matter_node.node_id, endpoint_id=matter_node.endpoint_ids[0], command_name="LIGHT_TOGGLE", payload={}
     )
     LOGGER.info(f"Toggled light? {success}")
 
