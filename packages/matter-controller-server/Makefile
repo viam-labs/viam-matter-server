@@ -4,6 +4,7 @@ build: clean-dist
 bundle: build
 	tar -czf module.tar.gz *.sh src dist pyproject.toml .env README.md
 
+version ?= $(shell hatch version)
 upload:
 	viam module upload --version $(version) --platform linux/arm64 module.tar.gz
 	viam module upload --version $(version) --platform linux/amd64 module.tar.gz

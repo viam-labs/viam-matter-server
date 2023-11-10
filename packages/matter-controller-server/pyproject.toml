@@ -49,6 +49,7 @@ allow-direct-references = true
 dependencies = [
   "coverage[toml]>=6.5",
   "pytest",
+  "build",
 ]
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"
@@ -68,8 +69,9 @@ python = ["3.7", "3.8", "3.9", "3.10", "3.11"]
 [tool.hatch.envs.dev]
 dependencies = [
   "python-matter-server[server]==4.0.2",
-  "home-assistant-chip-core @ {root:uri}/../../../connectedhomeip/out/controller/python/home_assistant_chip_core-2023.10.2-cp37-abi3-macosx_11_0_arm64.whl",
+  "home-assistant-chip-core @ {root:uri}/../../../connectedhomeip/out/controller/python/home_assistant_chip_core-2023.10.2-cp37-abi3-macosx_11_0_arm64.whl; sys_platform == 'darwin'",
   "matter-controller-api @ {root:uri}/../matter-controller-api",
+  "build",
 ]
 
 [tool.hatch.envs.lint]
