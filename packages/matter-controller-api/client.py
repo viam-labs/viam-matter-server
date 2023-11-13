@@ -24,15 +24,19 @@ async def main():
     robot = await connect()
 
     controller = MatterController.from_robot(robot, name=controller_name)
-    device_code = input("What is the pairing code for your device?")
+    device_code = input("What is the pairing code for your device? ")
     matter_node = await controller.commission(code=device_code)
     LOGGER.info(matter_node)
 
     LOGGER.info(f"Toggling light on Node {matter_node.node_id}")
-    success = await controller.command_device(
-        node_id=matter_node.node_id, endpoint_id=matter_node.endpoint_ids[0], command_name="LIGHT_TOGGLE", payload={}
-    )
-    LOGGER.info(f"Toggled light? {success}")
+    for endpoint in matter_node.endpoint_ids:
+        try:
+            success = await controller.command_device(
+                node_id=matter_node.node_id, endpoint_id=endpoint, command_name="LIGHT_TOGGLE", payload={}
+            )
+            LOGGER.info(f"Toggled light? {success}")
+        except:
+            LOGGER.error(f"Unable to toggle on endpoint {endpoint}")
 
     await robot.close()
 

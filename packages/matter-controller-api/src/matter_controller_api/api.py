@@ -85,6 +85,21 @@ class MatterController(ServiceBase):
         ...
 
 
+def json_serializer(obj):
+    if isinstance(obj, bytes):
+        try:
+            return obj.decode("utf-8")
+        except UnicodeDecodeError:
+            pass
+
+        try:
+            return obj.decode("utf-16")
+        except UnicodeDecodeError:
+            return "found bytes, ignore for now"
+
+    return f"Unknown: {obj}"
+
+
 class MatterControllerRPCService(MatterControllerServiceBase, ResourceRPCServiceBase):
     RESOURCE_TYPE = MatterController
 
@@ -102,8 +117,8 @@ class MatterControllerRPCService(MatterControllerServiceBase, ResourceRPCService
             interview_version=response.get("interview_version"),
             available=response.get("available"),
             is_bridge=response.get("is_bridge"),
-            attributes=response.get("attributes"),
-            last_subscription_attempt=response.last_subscription_attempt,
+            attributes=json.dumps(response.get("attributes"), default=json_serializer),
+            last_subscription_attempt=response.get("last_subscription_attempt"),
             endpoint_ids=response.get("endpoint_ids"),
         )
         await stream.send_message(message)
